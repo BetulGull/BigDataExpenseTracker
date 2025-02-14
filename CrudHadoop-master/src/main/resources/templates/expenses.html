@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Real-Time Expenses</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>Real-Time Expenses Dashboard</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>User ID</th>
+        <th>Total Expense</th>
+    </tr>
+    </thead>
+    <tbody id="expenseTable">
+    <!-- Real-time updates buraya eklenecek -->
+    </tbody>
+</table>
+
+<script>
+    // Verileri belirli aralıklarla güncelle
+    setInterval(function () {
+        $.ajax({
+            url: "/expenses/data", // Backend'deki endpoint
+            method: "GET",
+            success: function (data) {
+                $("#expenseTable").empty();
+                data.forEach(function (expense) {
+                    $("#expenseTable").append(
+                        `<tr>
+                                <td>${expense.userId}</td>
+                                <td>${expense.totalExpense}</td>
+                            </tr>`
+                    );
+                });
+            },
+            error: function (err) {
+                console.error("Failed to fetch expenses:", err);
+            }
+        });
+    }, 5000); // 5 saniyede bir güncelle
+</script>
+</body>
+</html>
